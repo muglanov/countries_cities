@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Страны и города</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        button {
+            display: inline-block;
+            padding: .5rem .5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #548cb7;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 9px #0053a1;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        button:hover {
+            background-color: #006bcc
+        }
+
+        button:active {
+            background-color: #0053a1;
+            box-shadow: 0 5px #0053a1;
+            transform: translateY(4px);
+        }
+
+        .wrapper {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            width: 60vh;
+            height: 60vh;
+            background-color: #cdcbe1;
+            box-shadow: 0 0 2px gray;
+            border-radius: 5px;
+            display: flex;
+            flex-flow: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-header {
+            font-size: 2rem;
+            color: #0053a1;
+            margin-bottom: 4rem;
+        }
+
+        .card .row {
+            margin: 2rem;
+        }
+        .card-list {
+            display: flex;
+            flex-flow: wrap;
+            max-height:40vh;
+            overflow: auto;
+        }
+
+        .countries {
+            width: 90vw;
+            height: 80vh;
+            display: flex;
+            flex-flow: wrap;
+            align-items: center;
+            justify-content: space-around;
+            overflow: auto;
+            box-shadow: 0 0 2px gray;
+        }
+
+        .countries .country {
+            width: 15rem;
+            margin: 1rem;
+            cursor: pointer;
+        }
+
+        .countries .country:hover {
+            color: #0053a1;
+        }
+    </style>
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+<script src="static/js/app.js"></script>
+
+<div data-ng-app="ccApp" data-ng-controller="ccController" class="wrapper">
+    <div data-ng-model="loginForm" class="card" ng-if="!authSuccessfull">
+        <div class="card-header">Авторизация</div>
+        <div class="row">
+            <label for="username">Номер телефона или email:</label>
+            <input type="text" id="username" data-ng-model="creds.username" required>
+        </div>
+        <div class="row">
+            <label for="password">Пароль</label>
+            <input type="password" id="password" data-ng-model="creds.password" required>
+        </div>
+        <button ng-click="handleAuth()" ng-if="!inProcess">Войти!</button>
+    </div>
+    <div class="countries" ng-if="countries.length !== 0 && !selectedCountry">
+        <div class="country" ng-repeat="country in countries" ng-click="clickHandler(country.id, country.title)">
+            <span ng-bind="country.title"></span>
+        </div>
+    </div>
+    <div ng-if="selectedCountry">
+        <div class="card" style="width: 80vw">
+            <div class="card-header">Города в стране '<span ng-bind="selectedCountry"></span>':</div>
+            <div class="card-list">
+                <div class="row" ng-repeat="city in cities |  orderBy: orderProperty" ng-bind="city.title"></div>
+            </div>
+            <div>
+                <button ng-click="handleBack()">Назад</button>
+                <button ng-click="handleSort()">Сортировка <span ng-bind="orderProperty ==='-title' ? ' →' : ' ←' "></span></button>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
